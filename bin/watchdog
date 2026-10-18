@@ -1,0 +1,4 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# يُشغَّل كل 15 دقيقة من نظام الجدولة في أندرويد (يعمل حتى لو أُغلق Termux)
+pgrep -f "wa-scheduler/run.sh" >/dev/null && exit 0
+bash "$HOME/wa-scheduler/bin/wa" start >/dev/null 2>&1

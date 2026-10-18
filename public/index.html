@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#128c5e">
+<title>جدولة واتساب</title>
+<style>
+:root{
+  --bg:#f3f5f4;--card:#fff;--text:#16211c;--muted:#66746d;--line:#e2e7e4;
+  --accent:#128c5e;--accent-2:#0e7a51;--accent-soft:#e3f4ec;
+  --warn:#b26a00;--warn-soft:#fff3dc;--bad:#c53030;--bad-soft:#fde8e8;--info:#2b6cb0;--info-soft:#e6f0fb;
+  --radius:14px;--shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04)
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1513;--card:#18201d;--text:#e6ece9;--muted:#93a29a;--line:#27322d;
+  --accent:#25b07a;--accent-2:#1f9d6c;--accent-soft:#163a2b;
+  --warn:#f0b54a;--warn-soft:#3a2d12;--bad:#f07a7a;--bad-soft:#3d1c1c;--info:#7fb2ec;--info-soft:#18283b;--shadow:none
+}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,"Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:12px 16px 90px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 16px 8px;max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px}
+header h1{font-size:19px;margin:0;flex:1;display:flex;align-items:center;gap:8px}
+.logo{width:30px;height:30px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:#fff}
+.pill{font-size:12.5px;padding:4px 10px;border-radius:99px;background:var(--line);color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:0 0 12px;box-shadow:var(--shadow)}
+.card h2{font-size:16px;margin:0 0 10px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+label{display:block;font-weight:600;margin:14px 0 6px;font-size:14px}
+label:first-child{margin-top:0}
+input[type=text],input[type=tel],input[type=password],input[type=datetime-local],input[type=search],select,textarea{
+  width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);outline:none;min-height:44px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{min-height:120px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{min-width:0}
+.grow{flex:1}
+.btn{border:0;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer;background:var(--line);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:active{background:var(--accent-2)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.danger{background:var(--bad-soft);color:var(--bad)}
+.btn.sm{min-height:34px;padding:6px 12px;font-size:13.5px}
+.btn:disabled{opacity:.55;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px}
+.tabs button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:9px;font-weight:600;color:var(--muted);cursor:pointer}
+.tabs button.on{background:var(--accent-soft);color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:5px 6px 5px 12px;font-size:13.5px;max-width:100%}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip button{border:0;background:transparent;color:inherit;cursor:pointer;width:22px;height:22px;border-radius:50%;padding:0;font-size:16px;line-height:1}
+.chip.group{background:var(--info-soft);color:var(--info)}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.file-box{border:1.5px dashed var(--line);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
+.file-box img{width:52px;height:52px;object-fit:cover;border-radius:8px}
+.file-ico{width:52px;height:52px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:22px;flex:none}
+.bar{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}
+.bar>div{height:100%;background:var(--accent);width:0}
+.check{display:flex;align-items:center;gap:8px;font-weight:500;margin-top:10px}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.job{padding:14px}
+.job-top{display:flex;align-items:flex-start;gap:10px}
+.job-when{font-weight:700}
+.badge{font-size:12px;padding:3px 9px;border-radius:99px;font-weight:600;white-space:nowrap}
+.b-pending{background:var(--info-soft);color:var(--info)}
+.b-sending{background:var(--warn-soft);color:var(--warn)}
+.b-done{background:var(--accent-soft);color:var(--accent)}
+.b-failed,.b-missed{background:var(--bad-soft);color:var(--bad)}
+.b-partial{background:var(--warn-soft);color:var(--warn)}
+.job-text{margin:8px 0;white-space:pre-wrap;word-break:break-word;max-height:4.7em;overflow:hidden;color:var(--text)}
+.job-meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--muted);font-size:13px}
+.res{font-size:13px;padding:4px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}
+.res:last-child{border:0}
+.code{font-size:34px;letter-spacing:4px;font-weight:800;text-align:center;direction:ltr;padding:14px;background:var(--accent-soft);color:var(--accent);border-radius:12px;margin:10px 0;font-family:ui-monospace,Consolas,monospace}
+ol{padding-inline-start:20px;margin:8px 0}
+.qr{display:block;margin:10px auto;background:#fff;padding:10px;border-radius:12px;max-width:260px;width:100%}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1d2a24;color:#fff;padding:11px 18px;border-radius:12px;z-index:50;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:14px}
+.toast.err{background:#9b2c2c}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--card);width:100%;max-width:560px;max-height:82vh;border-radius:18px 18px 0 0;padding:16px;display:flex;flex-direction:column}
+@media(min-width:600px){.modal-bg{align-items:center}.modal{border-radius:18px}}
+.modal-list{overflow:auto;margin:10px 0;flex:1}
+.pick{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.pick input{width:18px;height:18px;accent-color:var(--accent);flex:none}
+.pick .grow{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+pre.log{white-space:pre-wrap;word-break:break-all;font-size:11.5px;max-height:320px;overflow:auto;background:var(--bg);padding:10px;border-radius:10px;direction:ltr;text-align:left}
+.ltr{direction:ltr;unicode-bidi:embed}
+.hidden{display:none!important}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>جدولة واتساب</h1>
+  <span id="pill" class="pill"><i></i><b>...</b></span>
+</header>
+
+<div class="wrap">
+
+  <!-- تسجيل الدخول -->
+  <section id="auth" class="card hidden">
+    <h2 id="authTitle">تسجيل الدخول</h2>
+    <p class="muted small" id="authHint"></p>
+    <label for="pw">كلمة السر</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <div class="btns" style="margin-top:12px"><button class="btn primary" id="authBtn">دخول</button></div>
+  </section>
+
+  <div id="app" class="hidden">
+
+    <!-- ربط الحساب -->
+    <section id="link" class="card hidden">
+      <div id="linkConnecting" class="hidden">
+        <h2>جارٍ الاتصال بواتساب…</h2>
+        <p class="muted small">الحساب مربوط. إذا طال الأمر تأكد من اتصال الإنترنت في الهاتف.</p>
+        <p class="muted small ltr" id="linkErr"></p>
+      </div>
+      <div id="linkForm">
+        <h2>اربط حساب واتساب بيزنس (مرة واحدة فقط)</h2>
+        <label for="pairPhone">رقم هاتفك (رقم واتساب بيزنس)</label>
+        <div class="row">
+          <input id="pairPhone" class="grow ltr" type="tel" placeholder="2126XXXXXXXX" inputmode="tel">
+          <button class="btn primary" id="pairBtn">اطلب الرمز</button>
+        </div>
+        <div id="pairResult" class="hidden">
+          <div class="code" id="pairCode"></div>
+          <ol class="small">
+            <li>افتح <b>واتساب بيزنس</b> ← <b>الإعدادات</b> (⋮) ← <b>الأجهزة المرتبطة</b></li>
+            <li>اضغط <b>ربط جهاز</b> ثم <b>الربط برقم الهاتف بدلاً من ذلك</b></li>
+            <li>اكتب الرمز أعلاه. لديك حوالي دقيقتين.</li>
+          </ol>
+        </div>
+        <p class="small muted" style="margin:12px 0 0">تفتح هذه الصفحة من حاسوب؟ <a href="#" id="qrBtn">اعرض رمز QR</a> وامسحه بالهاتف.</p>
+        <img id="qrImg" class="qr hidden" alt="QR">
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button data-tab="new" class="on">رسالة جديدة</button>
+      <button data-tab="list">المجدولة <span id="countPending"></span></button>
+      <button data-tab="settings">الإعدادات</button>
+    </nav>
+
+    <!-- رسالة جديدة -->
+    <section id="tab-new">
+      <div id="editBanner" class="banner hidden"><span class="grow">تعديل رسالة مجدولة</span><button class="btn sm ghost" id="cancelEdit">إلغاء</button></div>
+      <div class="card">
+        <label for="rcInput">إلى</label>
+        <div class="row">
+          <input id="rcInput" class="grow ltr" type="tel" placeholder="06XXXXXXXX" inputmode="tel">
+          <button class="btn" id="rcAdd">إضافة</button>
+        </div>
+        <div class="quick">
+          <button class="btn sm ghost" id="pickContacts">👤 من جهاتي المحفوظة</button>
+          <button class="btn sm ghost" id="pickGroups">👥 من المجموعات</button>
+        </div>
+        <div class="chips" id="chips"></div>
+
+        <label for="msg">الرسالة</label>
+        <textarea id="msg" placeholder="اكتب رسالتك هنا…"></textarea>
+        <div class="small muted" style="text-align:left" id="msgCount">0</div>
+
+        <label>مرفق (اختياري)</label>
+        <input type="file" id="fileInput" class="hidden">
+        <div id="fileEmpty"><button class="btn ghost" id="fileBtn" style="width:100%">📎 إرفاق صورة / فيديو / ملف</button></div>
+        <div id="fileShow" class="hidden">
+          <div class="file-box">
+            <img id="filePrev" class="hidden" alt="">
+            <div id="fileIco" class="file-ico">📄</div>
+            <div class="grow" style="min-width:0">
+              <div id="fileName" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600"></div>
+              <div id="fileSize" class="small muted"></div>
+              <div class="bar" id="fileBarWrap"><div id="fileBar"></div></div>
+            </div>
+            <button class="btn sm danger" id="fileRemove">حذف</button>
+          </div>
+          <label class="check"><input type="checkbox" id="asDoc"> أرسل كملف (بالجودة الأصلية بدون ضغط)</label>
+        </div>
+
+        <label for="when">وقت الإرسال</label>
+        <input id="when" type="datetime-local" class="ltr">
+        <div class="quick">
+          <button class="btn sm ghost" data-q="10">بعد 10 دقائق</button>
+          <button class="btn sm ghost" data-q="60">بعد ساعة</button>
+          <button class="btn sm ghost" data-q="tonight">الليلة 21:00</button>
+          <button class="btn sm ghost" data-q="tomorrow">غداً 09:00</button>
+        </div>
+
+        <label for="repeat">التكرار</label>
+        <select id="repeat">
+          <option value="none">مرة واحدة</option>
+          <option value="daily">كل يوم</option>
+          <option value="weekly">كل أسبوع</option>
+          <option value="monthly">كل شهر</option>
+        </select>
+
+        <div class="btns" style="margin-top:16px">
+          <button class="btn primary grow" id="saveBtn">⏰ جدولة الرسالة</button>
+          <button class="btn" id="nowBtn">إرسال الآن</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- المجدولة -->
+    <section id="tab-list" class="hidden">
+      <div id="jobs"></div>
+      <div class="btns" style="justify-content:center"><button class="btn sm ghost hidden" id="clearFinished">حذف الرسائل المنتهية</button></div>
+    </section>
+
+    <!-- الإعدادات -->
+    <section id="tab-settings" class="hidden">
+      <div class="card">
+        <h2>الحساب</h2>
+        <div id="meBox" class="small"></div>
+        <div class="small muted" id="spaceBox" style="margin-top:6px"></div>
+        <div class="btns" style="margin-top:12px"><button class="btn sm danger" id="logoutBtn">فصل حساب واتساب</button></div>
+      </div>
+      <div class="card">
+        <h2>جهاتي المحفوظة</h2>
+        <div class="row">
+          <input id="ctName" class="grow" type="text" placeholder="الاسم">
+          <input id="ctPhone" class="grow ltr" type="tel" placeholder="الرقم">
+          <button class="btn" id="ctAdd">حفظ</button>
+        </div>
+        <div id="ctList" style="margin-top:8px"></div>
+      </div>
+      <div class="card">
+        <h2>إعدادات</h2>
+        <label for="cc">رمز الدولة الافتراضي (للأرقام التي تبدأ بـ 0)</label>
+        <div class="row"><input id="cc" class="grow ltr" type="tel" placeholder="212"><button class="btn" id="ccSave">حفظ</button></div>
+        <label for="newPw">تغيير كلمة سر هذه الصفحة</label>
+        <div class="row"><input id="newPw" class="grow" type="password" autocomplete="new-password"><button class="btn" id="pwSave">تغيير</button></div>
+      </div>
+      <div class="card">
+        <h2>افتح الصفحة من جهاز آخر</h2>
+        <p class="small muted">من حاسوب أو هاتف متصل بنفس شبكة الواي فاي:</p>
+        <div id="lanBox" class="ltr small"></div>
+      </div>
+      <div class="card">
+        <h2>سجل التشغيل</h2>
+        <button class="btn sm" id="logBtn">عرض السجل</button>
+        <pre class="log hidden" id="logBox"></pre>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s)
+const $$ = s => [...document.querySelectorAll(s)]
+let token = ''
+try { token = localStorage.getItem('wa_token') || '' } catch {}
+let status = {}, jobs = [], contacts = [], groups = null
+let recipients = [] // {jid?, phone?, label}
+let file = null, editingId = null, tab = 'new'
+const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+function toast(msg, err) {
+  const t = document.createElement('div')
+  t.className = 'toast' + (err ? ' err' : '')
+  t.textContent = msg
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), err ? 4500 : 2600)
+}
+async function api(path, opts = {}) {
+  const r = await fetch(path, {
+    method: opts.method || 'GET',
+    headers: { 'x-token': token, ...(opts.body ? { 'content-type': 'application/json' } : {}) },
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  })
+  if (r.status === 401 && !path.startsWith('/api/login')) { showAuth(); throw new Error('سجّل الدخول من جديد') }
+  const ct = r.headers.get('content-type') || ''
+  const data = ct.includes('json') ? await r.json() : await r.text()
+  if (!r.ok) throw new Error(data.error || 'خطأ')
+  return data
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+const fmtSize = b => b == null ? '' : b < 1024 * 1024 ? (b / 1024).toFixed(0) + ' KB' : b < 1024 ** 3 ? (b / 1024 / 1024).toFixed(1) + ' MB' : (b / 1024 ** 3).toFixed(2) + ' GB'
+const fmtDate = t => new Date(t).toLocaleString('ar-MA-u-nu-latn', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+function rel(t) {
+  const d = t - Date.now(), a = Math.abs(d)
+  const m = Math.round(a / 60000), h = Math.round(a / 3600000), dd = Math.round(a / 86400000)
+  const s = a < 60000 ? 'أقل من دقيقة' : m < 60 ? m + ' دقيقة' : h < 48 ? h + ' ساعة' : dd + ' يوم'
+  return d >= 0 ? 'بعد ' + s : 'منذ ' + s
+}
+const phoneLabel = jid => {
+  if (jid.endsWith('@g.us')) return (groups || []).find(g => g.id === jid)?.name || 'مجموعة'
+  const p = jid.split('@')[0]
+  return contacts.find(c => c.phone === p)?.name || '+' + p
+}
+
+// ---------- auth ----------
+async function showAuth() {
+  $('#app').classList.add('hidden'); $('#auth').classList.remove('hidden')
+  const st = await fetch('/api/auth-state', { headers: { 'x-token': token } }).then(r => r.json())
+  const setup = !st.hasPassword
+  $('#authTitle').textContent = setup ? 'أنشئ كلمة سر لهذه الصفحة' : 'تسجيل الدخول'
+  $('#authHint').textContent = setup ? 'تحمي الصفحة حتى لا يرسل أحد على الواي فاي رسائل من حسابك. 4 أحرف على الأقل.' : ''
+  $('#authBtn').textContent = setup ? 'إنشاء' : 'دخول'
+  $('#authBtn').onclick = async () => {
+    try {
+      const r = await api(setup ? '/api/setup' : '/api/login', { method: 'POST', body: { password: $('#pw').value } })
+      token = r.token
+      try { localStorage.setItem('wa_token', token) } catch {}
+      $('#pw').value = ''
+      start()
+    } catch (e) { toast(e.message, 1) }
+  }
+  $('#pw').onkeydown = e => { if (e.key === 'Enter') $('#authBtn').click() }
+  $('#pw').focus()
+}
+
+// ---------- status ----------
+let statusTimer
+async function refreshStatus() {
+  clearTimeout(statusTimer)
+  try {
+    status = await api('/api/status')
+    renderStatus()
+  } catch {}
+  statusTimer = setTimeout(refreshStatus, status.status === 'open' ? 15000 : 2500)
+}
+function renderStatus() {
+  const s = status.status
+  const pill = $('#pill')
+  const map = { open: ['ok', 'متصل'], connecting: ['warn', 'جارٍ الاتصال'], closed: ['warn', 'إعادة الاتصال…'], idle: ['bad', 'غير مربوط'], logged_out: ['bad', 'غير مربوط'] }
+  const [cls, txt] = map[s] || ['', '...']
+  pill.className = 'pill ' + cls
+  pill.querySelector('b').textContent = txt
+  const linked = s === 'open'
+  $('#link').classList.toggle('hidden', linked)
+  const reconnecting = status.registered && !linked
+  $('#linkConnecting').classList.toggle('hidden', !reconnecting)
+  $('#linkForm').classList.toggle('hidden', reconnecting)
+  $('#linkErr').textContent = status.lastError || ''
+  if (!$('#pairPhone').value && status.countryCode) $('#pairPhone').placeholder = status.countryCode + '6XXXXXXXX'
+  if (status.pairingCode) {
+    $('#pairResult').classList.remove('hidden')
+    $('#pairCode').textContent = status.pairingCode.replace(/^(.{4})(.{4})$/, '$1-$2')
+  } else $('#pairResult').classList.add('hidden')
+  const qr = $('#qrImg')
+  if (qrWanted && status.qr) { qr.src = status.qr; qr.classList.remove('hidden') } else qr.classList.add('hidden')
+  $('#meBox').innerHTML = status.me ? `مربوط بالرقم: <b class="ltr">+${esc(status.me.id.split(':')[0].split('@')[0])}</b> ${status.me.name ? '(' + esc(status.me.name) + ')' : ''}` : 'لا يوجد حساب مربوط'
+  $('#spaceBox').textContent = status.freeSpace != null ? 'المساحة الفارغة في الهاتف: ' + fmtSize(status.freeSpace) : ''
+  $('#lanBox').innerHTML = (status.lan || []).map(u => `<div><a href="${esc(u)}">${esc(u)}</a></div>`).join('') || '<span class="muted">غير متصل بشبكة واي فاي</span>'
+  if (document.activeElement !== $('#cc')) $('#cc').value = status.countryCode || ''
+  $('#countPending').textContent = status.pending ? `(${status.pending})` : ''
+}
+let qrWanted = false
+$('#pairBtn').onclick = async () => {
+  const btn = $('#pairBtn'); btn.disabled = true; btn.textContent = 'انتظر…'
+  try {
+    const r = await api('/api/pair', { method: 'POST', body: { phone: $('#pairPhone').value } })
+    status.pairingCode = r.pairingCode
+    renderStatus()
+  } catch (e) { toast(e.message, 1) }
+  btn.disabled = false; btn.textContent = 'اطلب الرمز'
+}
+$('#qrBtn').onclick = async e => {
+  e.preventDefault()
+  qrWanted = true
+  try { await api('/api/pair', { method: 'POST', body: {} }); refreshStatus() } catch (er) { toast(er.message, 1) }
+}
+
+// ---------- tabs ----------
+$$('.tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab))
+function setTab(t) {
+  tab = t
+  $$('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t))
+  ;['new', 'list', 'settings'].forEach(x => $('#tab-' + x).classList.toggle('hidden', x !== t))
+  if (t === 'list') loadJobs()
+  if (t === 'settings') loadContacts()
+}
+
+// ---------- recipients ----------
+function addRecipientsFromText(text) {
+  const parts = String(text).split(/[\n,;،]+/).map(s => s.trim()).filter(Boolean)
+  let bad = 0
+  for (const p of parts) {
+    const digits = p.replace(/[^\d+]/g, '')
+    if (digits.replace('+', '').length < 8) { bad++; continue }
+    if (!recipients.some(r => r.phone === digits)) recipients.push({ phone: digits, label: contacts.find(c => c.phone.endsWith(digits.replace(/^\+|^00|^0/, '')))?.name || '' })
+  }
+  if (bad) toast('بعض الأرقام غير صالحة', 1)
+  renderChips()
+}
+function renderChips() {
+  $('#chips').innerHTML = recipients.map((r, i) => `<span class="chip ${r.jid ? 'group' : ''}"><span><bdi>${esc(r.label || r.phone)}</bdi>${r.label && r.phone ? ' <small><bdi>' + esc(r.phone) + '</bdi></small>' : ''}</span><button data-i="${i}" aria-label="حذف">×</button></span>`).join('')
+  $$('#chips button').forEach(b => b.onclick = () => { recipients.splice(+b.dataset.i, 1); renderChips() })
+}
+$('#rcAdd').onclick = () => { addRecipientsFromText($('#rcInput').value); $('#rcInput').value = '' }
+$('#rcInput').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); $('#rcAdd').click() } }
+$('#rcInput').onpaste = e => setTimeout(() => { if (/[\n,;،]/.test($('#rcInput').value)) $('#rcAdd').click() }, 0)
+
+function picker(title, items, isSelected, onDone) {
+  const bg = document.createElement('div')
+  bg.className = 'modal-bg'
+  bg.innerHTML = `<div class="modal"><div class="row"><h2 class="grow" style="margin:0;font-size:16px">${esc(title)}</h2><button class="btn sm ghost" data-x>إغلاق</button></div>
+    <input type="search" placeholder="بحث…" style="margin-top:10px">
+    <div class="modal-list">${items.length ? items.map((it, i) => `<label class="pick" data-s="${esc((it.name + ' ' + (it.sub || '')).toLowerCase())}"><input type="checkbox" data-i="${i}" ${isSelected(it) ? 'checked' : ''}><span class="grow">${esc(it.name)}</span><span class="small muted ltr">${esc(it.sub || '')}</span></label>`).join('') : '<div class="empty">لا يوجد شيء هنا بعد</div>'}</div>
+    <div class="btns"><button class="btn sm ghost" data-all>تحديد الكل</button><button class="btn primary grow" data-ok>تم</button></div></div>`
+  document.body.appendChild(bg)
+  const close = () => bg.remove()
+  bg.onclick = e => { if (e.target === bg) close() }
+  bg.querySelector('[data-x]').onclick = close
+  bg.querySelector('input[type=search]').oninput = e => {
+    const q = e.target.value.toLowerCase()
+    bg.querySelectorAll('.pick').forEach(p => p.classList.toggle('hidden', !p.dataset.s.includes(q)))
+  }
+  bg.querySelector('[data-all]').onclick = () => bg.querySelectorAll('.pick:not(.hidden) input').forEach(c => c.checked = true)
+  bg.querySelector('[data-ok]').onclick = () => {
+    const chosen = [...bg.querySelectorAll('.pick input')].map(c => [items[+c.dataset.i], c.checked])
+    onDone(chosen); close()
+  }
+}
+$('#pickContacts').onclick = async () => {
+  await loadContacts()
+  if (!contacts.length) return toast('لا توجد جهات محفوظة — أضفها من الإعدادات', 1)
+  picker('جهاتي المحفوظة', contacts.map(c => ({ name: c.name, sub: '+' + c.phone, phone: c.phone })),
+    it => recipients.some(r => r.phone === it.phone),
+    chosen => {
+      for (const [it, on] of chosen) {
+        const idx = recipients.findIndex(r => r.phone === it.phone)
+        if (on && idx < 0) recipients.push({ phone: it.phone, label: it.name })
+        if (!on && idx >= 0) recipients.splice(idx, 1)
+      }
+      renderChips()
+    })
+}
+$('#pickGroups').onclick = async () => {
+  if (status.status !== 'open') return toast('اربط الحساب أولاً', 1)
+  try { groups = await api('/api/groups') } catch (e) { return toast(e.message, 1) }
+  picker('المجموعات', groups.map(g => ({ name: g.name, sub: g.size + ' عضو', jid: g.id })),
+    it => recipients.some(r => r.jid === it.jid),
+    chosen => {
+      for (const [it, on] of chosen) {
+        const idx = recipients.findIndex(r => r.jid === it.jid)
+        if (on && idx < 0) recipients.push({ jid: it.jid, label: it.name })
+        if (!on && idx >= 0) recipients.splice(idx, 1)
+      }
+      renderChips()
+    })
+}
+
+// ---------- text ----------
+$('#msg').oninput = () => $('#msgCount').textContent = $('#msg').value.length
+
+// ---------- file ----------
+$('#fileBtn').onclick = () => $('#fileInput').click()
+$('#fileInput').onchange = () => { const f = $('#fileInput').files[0]; if (f) uploadFile(f); $('#fileInput').value = '' }
+function showFile(meta, localUrl) {
+  file = meta
+  $('#fileEmpty').classList.toggle('hidden', !!meta)
+  $('#fileShow').classList.toggle('hidden', !meta)
+  if (!meta) return
+  $('#fileName').textContent = meta.name
+  $('#fileSize').textContent = fmtSize(meta.size)
+  const isImg = /^image\//.test(meta.mime)
+  $('#filePrev').classList.toggle('hidden', !(isImg && localUrl))
+  $('#fileIco').classList.toggle('hidden', !!(isImg && localUrl))
+  if (isImg && localUrl) $('#filePrev').src = localUrl
+  $('#fileIco').textContent = /^video/.test(meta.mime) ? '🎬' : /^audio/.test(meta.mime) ? '🎵' : isImg ? '🖼️' : '📄'
+}
+function uploadFile(f) {
+  if (f.size > 100 * 1024 * 1024) return toast('الملف أكبر من 100 ميغا', 1)
+  showFile({ name: f.name, size: f.size, mime: f.type, uploading: true }, URL.createObjectURL(f))
+  $('#fileBarWrap').classList.remove('hidden'); $('#fileBar').style.width = '0'
+  const xhr = new XMLHttpRequest()
+  xhr.open('POST', `/api/upload?name=${encodeURIComponent(f.name)}&mime=${encodeURIComponent(f.type || 'application/octet-stream')}`)
+  xhr.setRequestHeader('x-token', token)
+  xhr.upload.onprogress = e => { if (e.lengthComputable) $('#fileBar').style.width = (e.loaded / e.total * 100) + '%' }
+  xhr.onload = () => {
+    let d = {}; try { d = JSON.parse(xhr.responseText) } catch {}
+    if (xhr.status !== 200) { toast(d.error || 'فشل رفع الملف', 1); showFile(null); return }
+    file = d
+    $('#fileBarWrap').classList.add('hidden')
+  }
+  xhr.onerror = () => { toast('فشل رفع الملف', 1); showFile(null) }
+  xhr.send(f)
+}
+$('#fileRemove').onclick = () => { showFile(null); $('#asDoc').checked = false }
+
+// ---------- time ----------
+const pad = n => String(n).padStart(2, '0')
+const toLocalInput = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+function setWhen(d) { $('#when').value = toLocalInput(d) }
+$$('[data-q]').forEach(b => b.onclick = () => {
+  const q = b.dataset.q, d = new Date()
+  if (q === 'tonight') { d.setHours(21, 0, 0, 0); if (d < new Date()) d.setDate(d.getDate() + 1) }
+  else if (q === 'tomorrow') { d.setDate(d.getDate() + 1); d.setHours(9, 0, 0, 0) }
+  else d.setMinutes(d.getMinutes() + +q)
+  setWhen(d)
+})
+
+// ---------- save ----------
+function resetForm() {
+  recipients = []; renderChips()
+  $('#msg').value = ''; $('#msgCount').textContent = '0'
+  showFile(null); $('#asDoc').checked = false
+  $('#repeat').value = 'none'
+  const d = new Date(); d.setMinutes(d.getMinutes() + 10); setWhen(d)
+  editingId = null; $('#editBanner').classList.add('hidden')
+  $('#saveBtn').textContent = '⏰ جدولة الرسالة'
+}
+$('#cancelEdit').onclick = resetForm
+async function save(sendNow) {
+  if ($('#rcInput').value.trim()) $('#rcAdd').click()
+  if (!recipients.length) return toast('أضف رقماً أو مجموعة', 1)
+  if (file?.uploading) return toast('انتظر حتى ينتهي رفع الملف', 1)
+  const whenVal = $('#when').value
+  const sendAt = whenVal ? new Date(whenVal).getTime() : NaN
+  if (!sendNow) {
+    if (!whenVal) return toast('اختر وقت الإرسال', 1)
+    if (sendAt < Date.now() - 60000 && !confirm('هذا الوقت مضى بالفعل. هل تريد إرسالها الآن؟')) return
+  } else if (!confirm(`إرسال الآن إلى ${recipients.length} مستلم؟`)) return
+  const body = {
+    recipients: recipients.map(r => r.jid ? { jid: r.jid, label: r.label } : { phone: r.phone, label: r.label }),
+    text: $('#msg').value, file: file ? { id: file.id } : null, asDocument: $('#asDoc').checked,
+    sendAt, sendNow: !!sendNow, repeat: $('#repeat').value, tz: TZ
+  }
+  const btn = sendNow ? $('#nowBtn') : $('#saveBtn'); btn.disabled = true
+  try {
+    await api(editingId ? '/api/jobs/' + editingId : '/api/jobs', { method: editingId ? 'PUT' : 'POST', body })
+    await refreshStatus()
+    toast(sendNow ? 'جارٍ الإرسال…' : editingId ? 'تم حفظ التعديل ✓' : 'تمت الجدولة ✓')
+    resetForm()
+    setTab('list')
+  } catch (e) { toast(e.message, 1) }
+  btn.disabled = false
+}
+$('#saveBtn').onclick = () => save(false)
+$('#nowBtn').onclick = () => save(true)
+
+// ---------- jobs list ----------
+const STATUS = { pending: 'بانتظار الموعد', sending: 'قيد الإرسال…', done: 'أُرسلت ✓', failed: 'فشلت', partial: 'أُرسلت جزئياً', missed: 'فات موعدها' }
+const REPEAT = { daily: 'كل يوم', weekly: 'كل أسبوع', monthly: 'كل شهر' }
+let jobsTimer
+async function loadJobs() {
+  clearTimeout(jobsTimer)
+  try { jobs = await api('/api/jobs'); renderJobs() } catch {}
+  if (tab === 'list') jobsTimer = setTimeout(loadJobs, jobs.some(j => j.status === 'sending') ? 2500 : 10000)
+}
+function renderJobs() {
+  const box = $('#jobs')
+  if (!jobs.length) { box.innerHTML = '<div class="card empty">لا توجد رسائل مجدولة بعد</div>'; $('#clearFinished').classList.add('hidden'); return }
+  $('#clearFinished').classList.toggle('hidden', !jobs.some(j => !['pending', 'sending'].includes(j.status)))
+  box.innerHTML = jobs.map(j => {
+    const active = ['pending', 'sending'].includes(j.status)
+    const names = j.recipients.map(r => r.label || phoneLabel(r.jid))
+    const res = j.status === 'sending' || j.status === 'pending' && Object.keys(j.results || {}).length ? j.results : j.lastRun?.results || j.results || {}
+    const ok = Object.values(res).filter(x => x.ok).length
+    const when = active ? j.sendAt : (j.lastRun?.at || j.sendAt)
+    return `<div class="card job">
+      <div class="job-top">
+        <div class="grow"><div class="job-when">${esc(fmtDate(when))}</div><div class="small muted">${esc(rel(when))}${j.repeat && j.repeat !== 'none' ? ' · 🔁 ' + REPEAT[j.repeat] : ''}</div></div>
+        <span class="badge b-${j.status}">${STATUS[j.status] || j.status}</span>
+      </div>
+      ${j.text ? `<div class="job-text">${esc(j.text)}</div>` : ''}
+      <div class="job-meta">
+        <span>إلى: ${names.slice(0, 3).map(n => '<bdi>' + esc(n) + '</bdi>').join('، ')}${names.length > 3 ? ' +' + (names.length - 3) : ''}</span>
+        ${j.file ? `<span>📎 ${esc(j.file.name)}</span>` : ''}
+        ${Object.keys(res).length ? `<span>${ok}/${j.recipients.length} نجح</span>` : ''}
+        ${j.lastRun && active && j.repeat !== 'none' ? `<span>آخر إرسال: ${esc(fmtDate(j.lastRun.at))} (${j.lastRun.ok}/${j.lastRun.total})</span>` : ''}
+        ${j.error ? `<span style="color:var(--bad)">${esc(j.error)}</span>` : ''}
+      </div>
+      ${Object.keys(res).length ? `<details><summary>تفاصيل المستلمين</summary>${j.recipients.map(r => { const x = res[r.jid]; return `<div class="res"><span class="grow"><bdi>${esc(r.label || phoneLabel(r.jid))}</bdi></span><span style="color:${x ? (x.ok ? 'var(--accent)' : 'var(--bad)') : 'var(--muted)'}">${x ? (x.ok ? '✓ أُرسلت' : '✗ ' + esc(x.error || 'فشل')) : 'لم تُرسل بعد'}</span></div>` }).join('')}</details>` : ''}
+      <div class="btns" style="margin-top:10px">
+        ${j.status !== 'sending' ? `<button class="btn sm ghost" data-edit="${j.id}">${active ? 'تعديل' : 'نسخ كرسالة جديدة'}</button>` : ''}
+        ${j.status !== 'sending' && !j.file?.deleted ? `<button class="btn sm ghost" data-now="${j.id}">${j.status === 'partial' ? 'أعد للفاشلين' : active ? 'أرسل الآن' : 'أعد الإرسال'}</button>` : ''}
+        ${j.status !== 'sending' ? `<button class="btn sm danger" data-del="${j.id}">حذف</button>` : ''}
+      </div>
+    </div>`
+  }).join('')
+  $$('[data-del]').forEach(b => b.onclick = async () => {
+    if (!confirm('حذف هذه الرسالة؟')) return
+    try { await api('/api/jobs/' + b.dataset.del, { method: 'DELETE' }); loadJobs(); refreshStatus() } catch (e) { toast(e.message, 1) }
+  })
+  $$('[data-now]').forEach(b => b.onclick = async () => {
+    if (!confirm('إرسالها الآن؟')) return
+    try { await api(`/api/jobs/${b.dataset.now}/send-now`, { method: 'POST' }); toast('جارٍ الإرسال…'); setTimeout(loadJobs, 800) } catch (e) { toast(e.message, 1) }
+  })
+  $$('[data-edit]').forEach(b => b.onclick = () => editJob(jobs.find(j => j.id === b.dataset.edit)))
+}
+function editJob(j) {
+  const active = ['pending', 'sending'].includes(j.status)
+  resetForm()
+  recipients = j.recipients.map(r => r.jid.endsWith('@g.us') ? { jid: r.jid, label: r.label || phoneLabel(r.jid) } : { phone: '+' + r.jid.split('@')[0], label: r.label })
+  renderChips()
+  $('#msg').value = j.text || ''; $('#msgCount').textContent = $('#msg').value.length
+  if (j.file && !j.file.deleted) showFile(j.file)
+  $('#asDoc').checked = !!j.asDocument
+  $('#repeat').value = j.repeat || 'none'
+  if (active) {
+    setWhen(new Date(j.sendAt))
+    editingId = j.id
+    $('#editBanner').classList.remove('hidden')
+    $('#saveBtn').textContent = '💾 حفظ التعديل'
+  }
+  setTab('new')
+  window.scrollTo(0, 0)
+}
+$('#clearFinished').onclick = async () => {
+  if (!confirm('حذف كل الرسائل المنتهية والفاشلة؟')) return
+  try { await api('/api/jobs/clear-finished', { method: 'POST' }); loadJobs() } catch (e) { toast(e.message, 1) }
+}
+
+// ---------- settings ----------
+async function loadContacts() {
+  try { contacts = await api('/api/contacts') } catch { return }
+  $('#ctList').innerHTML = contacts.length ? contacts.map(c => `<div class="res"><span class="grow">${esc(c.name)}</span><span class="ltr muted">+${esc(c.phone)}</span><button class="btn sm danger" data-ct="${esc(c.phone)}">حذف</button></div>`).join('') : '<div class="small muted">لا توجد جهات بعد</div>'
+  $$('[data-ct]').forEach(b => b.onclick = async () => { await api('/api/contacts/' + b.dataset.ct, { method: 'DELETE' }); loadContacts() })
+}
+$('#ctAdd').onclick = async () => {
+  try { await api('/api/contacts', { method: 'POST', body: { name: $('#ctName').value, phone: $('#ctPhone').value } }); $('#ctName').value = $('#ctPhone').value = ''; loadContacts(); toast('تم الحفظ ✓') } catch (e) { toast(e.message, 1) }
+}
+$('#ccSave').onclick = async () => { try { await api('/api/settings', { method: 'POST', body: { countryCode: $('#cc').value } }); toast('تم الحفظ ✓'); refreshStatus() } catch (e) { toast(e.message, 1) } }
+$('#pwSave').onclick = async () => {
+  try { const r = await api('/api/settings', { method: 'POST', body: { newPassword: $('#newPw').value } }); token = r.token; try { localStorage.setItem('wa_token', token) } catch {}; $('#newPw').value = ''; toast('تم تغيير كلمة السر ✓') } catch (e) { toast(e.message, 1) }
+}
+$('#logoutBtn').onclick = async () => {
+  if (!confirm('فصل حساب واتساب؟ ستتوقف الرسائل المجدولة حتى تربطه من جديد.')) return
+  try { await api('/api/logout', { method: 'POST' }); refreshStatus() } catch (e) { toast(e.message, 1) }
+}
+$('#logBtn').onclick = async () => {
+  try { const t = await api('/api/log'); const b = $('#logBox'); b.textContent = t || '(فارغ)'; b.classList.remove('hidden'); b.scrollTop = b.scrollHeight } catch (e) { toast(e.message, 1) }
+}
+
+// ---------- start ----------
+async function start() {
+  const st = await fetch('/api/auth-state', { headers: { 'x-token': token } }).then(r => r.json()).catch(() => ({}))
+  if (!st.valid) return showAuth()
+  $('#auth').classList.add('hidden'); $('#app').classList.remove('hidden')
+  resetForm()
+  refreshStatus()
+  loadContacts()
+}
+start()
+</script>
+</body>
+</html>

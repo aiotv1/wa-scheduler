@@ -1,0 +1,24 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# أوامر التحكم: wa start | stop | restart | status | log | open
+APP="$HOME/wa-scheduler"
+running() { pgrep -f "wa-scheduler/run.sh" >/dev/null; }
+case "$1" in
+  start|"")
+    if running; then echo "✓ السيرفر يعمل بالفعل — افتح: http://localhost:8080"
+    else
+      timeout 5 termux-wake-lock 2>/dev/null
+      nohup bash "$APP/run.sh" >/dev/null 2>&1 &
+      sleep 2
+      echo "✓ تم التشغيل — افتح في المتصفح: http://localhost:8080"
+    fi ;;
+  stop)
+    pkill -f "wa-scheduler/run.sh"; pkill -f "node server.js"
+    timeout 5 termux-wake-unlock 2>/dev/null
+    echo "تم الإيقاف" ;;
+  restart) "$0" stop; sleep 1; "$0" start ;;
+  status)
+    if running; then echo "✓ يعمل"; else echo "✗ متوقف — اكتب: wa start"; fi ;;
+  log) tail -n 60 "$APP/data/log.txt" ;;
+  open) termux-open-url "http://localhost:8080" 2>/dev/null || am start -a android.intent.action.VIEW -d "http://localhost:8080" >/dev/null ;;
+  *) echo "الاستعمال: wa start | stop | restart | status | log | open" ;;
+esac
